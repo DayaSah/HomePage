@@ -3,74 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEPSE Terminal | Command Center</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>NEPSE Terminal | Dynamic</title>
+    <link rel="stylesheet" href="homePage.css">
 </head>
 <body>
-    <div class="top-bar">
-        <form action="https://www.google.com/search" method="get" class="search-bar" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" name="q" placeholder="Search Google or Type URL..." autocomplete="off">
+
+    <div class="analog-clock">
+        <div class="clock-face" id="clockFace"></div> 
+        <div class="hand hour-hand" id="hourHand"></div>
+        <div class="hand minute-hand" id="minuteHand"></div>
+        <div class="hand second-hand" id="secondHand"></div>
+        <div class="center-dot"></div>
+    </div>
+    
+    <div id="date">NEPSE ANALYST TERMINAL</div>
+
+    <div class="search-container">
+        <form id="tickerSearchForm">
+            <input type="text" id="tickerInput" placeholder="Enter NEPSE Ticker (e.g., NHPC)..." autocomplete="off" required>
         </form>
-        <div class="clock" id="clock">00:00:00</div>
     </div>
 
-    <div class="grid">
-        <a href="https://gemini.google.com/" class="card" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=400');">
-            <h3>Google Gemini</h3>
-            <p>AI Assistant</p>
-        </a>
-        <a href="https://chatgpt.com/" class="card" style="background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=400');">
-            <h3>ChatGPT</h3>
-            <p>Code & Logic</p>
-        </a>
-        <a href="https://claude.ai/" class="card" style="background-image: url('https://images.unsplash.com/photo-1684369175836-7c390cbba6f2?q=80&w=400');">
-            <h3>Claude</h3>
-            <p>Deep Analysis</p>
-        </a>
-        <a href="https://chat.deepseek.com/" class="card" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=400');">
-            <h3>Deepseek</h3>
-            <p>Code Generation</p>
-        </a>
+    <main class="dashboard">
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>AI Intelligence</h2>
+                <ul class="links" id="ai-links"></ul>
+                <button class="see-more-btn" id="seeMoreBtn">See More ▼</button>
+            </div>
+        </section>
 
-        <a href="https://github.com/Jagdishsah/Copy-Paste" class="card" style="background-image: url('https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=400');">
-            <h3>GitHub Repo</h3>
-            <p>Version Control</p>
-        </a>
-        <a href="https://supabase.com/dashboard" class="card" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=400');">
-            <h3>Supabase</h3>
-            <p>Database & Auth</p>
-        </a>
-        <a href="https://cloud.mongodb.com/" class="card" style="background-image: url('https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=400');">
-            <h3>MongoDB Atlas</h3>
-            <p>NoSQL Storage</p>
-        </a>
-        <a href="https://colab.research.google.com/" class="card" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400');">
-            <h3>Google Colab</h3>
-            <p>Python Engine</p>
-        </a>
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>Dev & Backend</h2>
+                <ul class="links">
+                    <li><a href="https://github.com" target="_blank">GitHub</a></li>
+                    <li><a href="https://colab.research.google.com/" target="_blank">Google Colab</a></li>
+                    <li><a href="https://console.neon.tech/app/projects/silent-tree-13520884" target="_blank">Neon Database</a></li>
+                    <li><a href="https://chatgpt.com/codex" target="_blank">Codex By ChatGPT</a></li>
+                    <li><a href="https://www.mongodb.com/atlas" target="_blank">Mongo DB</a></li>
+                    <li><a href="https://supabase.com/dashboard/project/taolqfpiterwekgduaeo" target="_blank">SupaBase</a></li>
+                    <li><a href="https://huggingface.co" target="_blank">Hugging Face</a></li>
+                </ul>
+            </div>
+        </section>
 
-        <a href="https://terminal.streamlit.app" class="card" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400'); border: 2px solid var(--accent);">
-            <h3>TMS Ledger Live</h3>
-            <p>Production App</p>
-        </a>
-        <a href="https://tms41.nepsetms.com.np/login" class="card" style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=400');">
-            <h3>TMS 41</h3>
-            <p>Live Trading</p>
-        </a>
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>Market Tools</h2>
+                <ul class="links">
+                    <li><a href="https://tms41.nepsetms.com.np/tms" target="_blank">TMS 41 Login</a></li>
+                    <li><a href="https://nepsealpha.com/trading/chart" target="_blank">NepseAlpha Chart</a></li>
+                    <li><a href="https://nepsealpha.com/floorsheet-history" target="_blank">NepseAlpha Stock Holding</a></li>
+                    <li><a href="https://chukul.com" target="_blank">Chukul</a></li>
+                    <li><a href="https://chukul.com/chart" target="_blank">Chukul Chart</a></li>
+                    <li><a href="https://sharesansar.com" target="_blank">ShareSansar</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>Live Deployments</h2>
+                <ul class="links">
+                    <li><a href="https://share.streamlit.io/" target="_blank">Streamlit Home</a></li>
+                    <li><a href="https://nepse-terminal.streamlit.app/" target="_blank">Nepse Terminal</a></li>
+                    <li><a href="https://chatgptcodespace.streamlit.app/" target="_blank">TMS Ledger</a></li>
+                    <li><a href="https://gogle-colab.streamlit.app/" target="_blank">Google Colab</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>Global & Crypto</h2>
+                <ul class="links">
+                    <li><a href="https://www.tradingview.com" target="_blank">TradingView</a></li>
+                    <li><a href="https://coinmarketcap.com" target="_blank">CoinMarketCap</a></li>
+                    <li><a href="https://www.bloomberg.com/markets" target="_blank">Bloomberg Markets</a></li>
+                    <li><a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a></li>
+                    <li><a href="https://www.investing.com" target="_blank">Investing.com</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="category">
+            <div class="cat-bg"></div>
+            <div class="cat-content">
+                <h2>Additional</h2>
+                <ul class="links">
+                    <li><a href="https://www.sharesansar.com" target="_blank">ShareSansar</a></li>
+                    <li><a href="https://merolagani.com" target="_blank">MeroLagani</a></li>
+                    <li><a href="https://nepsechart.com" target="_blank">Nepse Chart (SystemXlite)</a></li>
+                    <li><a href="https://arthasarokar.com" target="_blank">Artha Sarokar</a></li>
+                    <li><a href="https://sastoshare.com" target="_blank">Sastoshare</a></li>
+                    <div class="hidden-links" id="extra-links">
+                        <li><a href="https://www.nepalstock.com.np" target="_blank">NEPSE Official</a></li>             
+                        <li><a href="https://www.nepalipaisa.com" target="_blank">Nepali Paisa</a></li>
+                        <li><a href="https://bizmandu.com" target="_blank">Bizmandu</a></li>
+                        <li><a href="https://www.nrb.org.np" target="_blank">Nepal Rastra Bank (NRB)</a></li>
+                        <li><a href="https://www.sebon.gov.np" target="_blank">SEBON Pipeline</a></li>
+                        <li><a href="https://www.cdsc.com.np" target="_blank">CDSC Official</a></li>
+                        <li><a href="https://www.investopaper.com" target="_blank">Investopaper</a></li>
+                        <li><a href="https://financialnotices.com" target="_blank">Financial Notices</a></li>
+                        <li><a href="https://bankingkhabar.com" target="_blank">Banking Khabar</a></li>
+                        <li><a href="https://meroshare.cdsc.com.np" target="_blank">MeroShare Login</a></li>
+                    </div>
+                </ul>
+                <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+            </div>
+        </section>
+    </main>
+
+    <div class="terminal-greeting">
+        <h1 id="greetingText">Welcome, Analyst.</h1>
+        <p id="greetingSubtext">Systems are online and ready.</p>
     </div>
 
-    <div class="transactions-panel">
-        <div class="panel-header">
-            <h3>📡 Live Supabase Ledger</h3>
-            <span id="sync-status">Syncing...</span>
-        </div>
-        <div id="transactions-container" class="transactions-container"></div>
-    </div>
-
-    <script type="module" src="js/app.js"></script>
+    <script src="homePage.js"></script>
 </body>
 </html>
