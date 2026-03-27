@@ -246,3 +246,60 @@ body {
     color: #cbd5e1;
     font-family: monospace; 
 }
+
+/* --- Active Portfolio Table Styling --- */
+.portfolio-widget {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(20, 25, 35, 0.7); /* Adjust based on your current theme */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.term-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.term-table th, .term-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: left;
+}
+
+.term-table th {
+    background: rgba(0, 0, 0, 0.2);
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.term-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.term-table th.num, .term-table td.num {
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.loading-text {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+    padding: 30px !important;
+}
+
+.profit { color: #10b981; font-weight: bold; }
+.loss { color: #ef4444; font-weight: bold; }
+.symbol-badge { font-weight: 800; color: #3b82f6; }
