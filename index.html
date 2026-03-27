@@ -129,7 +129,33 @@
         <h1 id="greetingText">Welcome, Analyst.</h1>
         <p id="greetingSubtext">Systems are online and ready.</p>
     </div>
-
+<section class="portfolio-widget" style="grid-column: 1 / -1; margin-top: 20px;">
+            <div class="cat-bg"></div>
+            <div class="cat-content" style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>Active Holdings & Live P&L</h2>
+                    <div id="portfolio-summary" style="font-size: 0.9rem; color: #10b981; font-weight: bold;">Loading equity...</div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="term-table">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th class="num">Remaining Qty</th>
+                                <th class="num">WACC (Est)</th>
+                                <th class="num">LTP</th>
+                                <th class="num">Current Value</th>
+                                <th class="num">Live P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody id="active-portfolio-body">
+                            <tr><td colspan="6" class="loading-text">Fetching live data from Render & NeonDb...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     <script src="homePage.js"></script>
 </body>
 </html>
