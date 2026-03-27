@@ -8,10 +8,19 @@ const formatInt = (num) => parseInt(num).toLocaleString('en-IN');
 
 async function loadActivePortfolio() {
     const tbody = document.getElementById('active-portfolio-body');
-    if (!tbody) return; // Exit if the table isn't on the page yet
+    if (!tbody) return; 
+
+    // --- UX UPGRADE: WAKE UP MESSAGE ---
+    tbody.innerHTML = `<tr><td colspan="6" class="loading-text">
+        <span style="color: #3b82f6;">Connecting to Cloud Data...</span><br>
+        <span style="font-size: 0.8em; color: #94a3b8; margin-top: 5px; display: inline-block;">
+            (If the server was asleep, this may take up to 50 seconds to boot up)
+        </span>
+    </td></tr>`;
     
     try {
         // Fetch Portfolio and Cache simultaneously
+       
         const [portfolioRes, cacheRes] = await Promise.all([
             fetch(`${API_BASE}/portfolio`),
             fetch(`${API_BASE}/cache`)
