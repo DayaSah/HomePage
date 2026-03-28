@@ -236,16 +236,22 @@ body {
     border-bottom: 1px solid #334155;
 }
 
-/* Sticky Ticker Column */
+/* --- THE STICKY TICKER COLUMN (Bulletproof Mobile Fix) --- */
 .term-table th:first-child,
 .term-table td:first-child {
+    position: -webkit-sticky; /* CRITICAL: Forces iPhones to respect the sticky layout */
     position: sticky;
     left: 0;
-    background-color: #0f172a; 
-    z-index: 2; 
+    /* Ensure this matches your table's background exactly so text doesn't vanish */
+    background-color: #141923; 
+    z-index: 10; /* Bumped up to ensure it never hides behind other scrolling data */
     border-right: 2px solid #334155; 
 }
-.term-table th:first-child { z-index: 3; }
+
+/* Ensure the top-left header stays above absolutely everything */
+.term-table th:first-child {
+    z-index: 11; 
+}
 
 /* Table Typography & Colors */
 .loading-text { text-align: center; color: var(--text-muted); font-style: italic; padding: 30px !important; }
