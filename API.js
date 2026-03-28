@@ -110,3 +110,41 @@ document.getElementById('sync-btn').addEventListener('click', async () => {
         btn.disabled = false;
     }
 });
+// --- Manual Sync Trigger ---
+document.getElementById('sync-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sync-btn');
+    const originalContent = btn.innerHTML;
+    
+    // UI Feedback: Show it's loading
+    btn.innerHTML = `<span style="color: #10b981;">🔄 Syncing...</span>`;
+    btn.disabled = true;
+    btn.style.borderColor = '#10b981';
+
+    try {
+        // Ping the backend FastAPI background task
+        const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
+        
+        if (response.ok) {
+            // Show success briefly
+            btn.innerHTML = `<span style="color: #10b981;">✅ Sync Started!</span>`;
+            
+            // Reload the table data after 15 seconds to grab the freshly scraped data
+            setTimeout(() => {
+                loadActivePortfolio();
+            }, 15000); 
+        } else {
+            throw new Error("Failed to trigger sync");
+        }
+    } catch (error) {
+        console.error("Sync Error:", error);
+        btn.innerHTML = `<span style="color: #ef4444;">⚠️ Sync Failed</span>`;
+        btn.style.borderColor = '#ef4444';
+    } finally {
+        // Reset button after 4 seconds
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+            btn.style.borderColor = 'rgba(34, 211, 238, 0.3)';
+        }, 4000);
+    }
+});
