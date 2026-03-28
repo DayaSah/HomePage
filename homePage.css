@@ -1,10 +1,24 @@
+/* =========================================
+   NEPSE ANALYST TERMINAL - MASTER STYLESHEET
+   ========================================= */
+
 :root {
+    /* Centralized Color Palette */
     --glass: rgba(15, 23, 42, 0.85);
     --accent: #22d3ee;
     --text: #f1f5f9;
+    --text-muted: #cbd5e1;
+    --profit: #10b981;
+    --loss: #ef4444;
+    --symbol: #3b82f6;
+    --border: rgba(255, 255, 255, 0.1);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body {
     font-family: 'Inter', system-ui, sans-serif;
@@ -14,17 +28,44 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
-    /* Changed initial image load from w=2000 to w=1280 to save memory */
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                 url('https://images.unsplash.com/photo-1611974717482-58a252ce80be?auto=format&fit=crop&q=80&w=1280');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    transition: background-image 1s ease-in-out;
+    /* Removed buggy background transition */
 }
 
+/* --- UTILITIES & SEARCH --- */
 .hidden-links { display: none; }
 
+#date { 
+    color: var(--accent); 
+    letter-spacing: 2px; 
+    margin-bottom: 30px; 
+    font-weight: 600; 
+}
+
+.search-container { 
+    width: 100%; 
+    max-width: 800px; 
+    margin-bottom: 40px; 
+}
+
+.search-container input {
+    width: 100%; 
+    padding: 15px 25px; 
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: var(--glass); 
+    backdrop-filter: blur(5px); 
+    color: white; 
+    font-size: 1.1rem; 
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* --- BUTTONS --- */
 .see-more-btn {
     margin-top: auto; 
     background: rgba(34, 211, 238, 0.1);
@@ -38,120 +79,69 @@ body {
     transition: all 0.3s ease;
 }
 
-.see-more-btn:hover {
-    background: rgba(34, 211, 238, 0.2);
-    color: white;
+/* Hover effects only apply to devices with a mouse (prevents mobile sticky tap bugs) */
+@media (hover: hover) {
+    .see-more-btn:hover {
+        background: rgba(34, 211, 238, 0.2);
+        color: white;
+    }
+    .category:hover { 
+        transform: translateY(-10px); 
+    }
 }
 
-#date { color: var(--accent); letter-spacing: 2px; margin-bottom: 30px; font-weight: 600; }
-
-.search-container { width: 100%; max-width: 800px; margin-bottom: 40px; }
-.search-container input {
-    width: 100%; padding: 15px 25px; border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: var(--glass); 
-    backdrop-filter: blur(5px); /* PERFORMANCE UPDATE: Reduced from 10px */
-    color: white; font-size: 1.1rem; outline: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-/* --- PREMIUM ANALOG CLOCK STYLES --- */
+/* --- PREMIUM ANALOG CLOCK --- */
 .analog-clock {
     width: 160px;
     height: 160px;
     border-radius: 50%;
     background: rgba(10, 15, 25, 0.7); 
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px); /* PERFORMANCE UPDATE: Reduced from 20px */
+    backdrop-filter: blur(8px); 
     position: relative;
     margin-bottom: 15px;
-    box-shadow: 
-        inset 0 0 10px rgba(0, 0, 0, 0.6), /* PERFORMANCE UPDATE: simplified shadows */
-        0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .clock-tick {
-    position: absolute;
-    width: 2px;
-    height: 8px;
+    position: absolute; width: 2px; height: 8px;
     background: rgba(255, 255, 255, 0.3);
-    top: 4px;
-    left: 50%;
-    transform-origin: 50% 76px;
+    top: 4px; left: 50%; transform-origin: 50% 76px;
 }
 
 .clock-tick.main-tick {
-    width: 3px;
-    height: 12px;
-    background: var(--accent);
+    width: 3px; height: 12px; background: var(--accent);
     box-shadow: 0 0 5px var(--accent);
 }
 
 .hand {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform-origin: bottom center;
-    border-radius: 10px;
-    z-index: 10;
-    transition: transform 0.05s cubic-bezier(0.4, 2.08, 0.55, 0.44); 
+    position: absolute; bottom: 50%; left: 50%;
+    transform-origin: bottom center; border-radius: 10px;
+    z-index: 10; transition: transform 0.05s cubic-bezier(0.4, 2.08, 0.55, 0.44); 
 }
 
-.hour-hand {
-    width: 4px;
-    height: 40px;
-    background: #ffffff;
-    margin-left: -2px; 
-    box-shadow: 0 0 4px rgba(0,0,0,0.5);
-}
-
-.minute-hand {
-    width: 3px;
-    height: 60px;
-    background: #cbd5e1;
-    margin-left: -1.5px;
-    box-shadow: 0 0 4px rgba(0,0,0,0.5);
-}
-
-.second-hand {
-    width: 2px;
-    height: 70px;
-    background: var(--accent);
-    margin-left: -1px;
-    z-index: 11;
-    box-shadow: 0 0 6px var(--accent);
-}
-
+.hour-hand { width: 4px; height: 40px; background: #ffffff; margin-left: -2px; box-shadow: 0 0 4px rgba(0,0,0,0.5); }
+.minute-hand { width: 3px; height: 60px; background: var(--text-muted); margin-left: -1.5px; box-shadow: 0 0 4px rgba(0,0,0,0.5); }
+.second-hand { width: 2px; height: 70px; background: var(--accent); margin-left: -1px; z-index: 11; box-shadow: 0 0 6px var(--accent); }
 .second-hand::after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 15px;
-    background: var(--accent);
-    bottom: -15px;
-    left: 0;
-    border-radius: 2px;
+    content: ''; position: absolute; width: 2px; height: 15px;
+    background: var(--accent); bottom: -15px; left: 0; border-radius: 2px;
 }
 
 .center-dot {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: #1e293b;
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-    z-index: 12;
-    box-shadow: 0 0 10px var(--accent);
+    position: absolute; width: 10px; height: 10px;
+    background: #1e293b; border: 2px solid var(--accent);
+    border-radius: 50%; z-index: 12; box-shadow: 0 0 10px var(--accent);
 }
 
-/* --- DASHBOARD LAYOUT --- */
+/* --- DASHBOARD LAYOUT (Upgraded to CSS Grid) --- */
 .dashboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    /* Auto-fits as many 290px columns as possible, ensuring perfect alignment */
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
     gap: 25px;
     max-width: 1300px;
     margin: 0 auto 40px auto;
@@ -161,159 +151,116 @@ body {
 .category {
     position: relative;
     min-height: 350px; 
-    width: 290px;
+    width: 100%; /* Now controlled by the grid */
     border-radius: 20px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--border);
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
 }
 
-.category:hover { transform: translateY(-10px); }
-
 .cat-bg {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 1;
-    background-size: cover;
-    background-position: center;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1; background-size: cover; background-position: center;
     filter: brightness(0.4) saturate(1.2);
 }
 
 .cat-content {
-    position: relative;
-    z-index: 2;
-    padding: 20px;
-    height: 100%; 
-    min-height: 350px; 
+    position: relative; z-index: 2; padding: 20px;
+    height: 100%; min-height: 350px; 
     background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
 }
 
 .category h2 {
-    font-size: 0.9rem;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(34, 211, 238, 0.3);
-    padding-bottom: 5px;
+    font-size: 0.9rem; color: var(--accent); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 15px;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.3); padding-bottom: 5px;
 }
 
 .links { list-style: none; }
 .links li { margin-bottom: 8px; }
 .links a {
-    color: #cbd5e1;
-    text-decoration: none;
-    font-size: 0.95rem;
-    display: block;
-    padding: 5px 0;
-    transition: 0.2s;
+    color: var(--text-muted); text-decoration: none;
+    font-size: 0.95rem; display: block; padding: 5px 0; transition: 0.2s;
 }
 .links a:hover { color: white; padding-left: 5px; }
 
 /* --- TERMINAL GREETING --- */
 .terminal-greeting {
-    text-align: center;
-    margin: 0 auto;
-    padding: 25px;
-    background: var(--glass);
-    backdrop-filter: blur(8px); /* PERFORMANCE UPDATE: Reduced from 20px */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    width: 100%;
-    max-width: 800px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* PERFORMANCE UPDATE */
+    text-align: center; margin: 0 auto; padding: 25px;
+    background: var(--glass); backdrop-filter: blur(8px); 
+    border: 1px solid var(--border); border-radius: 12px;
+    width: 100%; max-width: 800px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
 }
 
-.terminal-greeting h1 {
-    font-size: 2rem;
-    color: var(--text);
-    margin-bottom: 8px;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
+.terminal-greeting h1 { font-size: 2rem; color: var(--text); margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
+.terminal-greeting .highlight { color: var(--accent); text-shadow: 0 0 10px rgba(34, 211, 238, 0.4); }
+.terminal-greeting p { font-size: 0.95rem; color: var(--text-muted); font-family: monospace; }
 
-.terminal-greeting .highlight {
-    color: var(--accent);
-    text-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
-}
-
-.terminal-greeting p {
-    font-size: 0.95rem;
-    color: #cbd5e1;
-    font-family: monospace; 
-}
-
-/* --- Active Portfolio Table Styling --- */
+/* --- ACTIVE PORTFOLIO TABLE WIDGET --- */
 .portfolio-widget {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    background: rgba(20, 25, 35, 0.7); /* Adjust based on your current theme */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(20, 25, 35, 0.7); 
+    border: 1px solid var(--border);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* --- RESPONSIVE TABLE CONTAINER --- */
+/* Responsive Table Container with Custom Scrollbar */
 .table-container {
     width: 100%;
-    overflow-x: auto; /* Enables horizontal scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth momentum scrolling on iPhones */
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
     border-radius: 6px;
-    border: 1px solid #334155; /* Subtle border to define the scroll area */
+    border: 1px solid #334155; 
 }
+
+/* Custom Webkit Scrollbar */
+.table-container::-webkit-scrollbar { height: 8px; }
+.table-container::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+.table-container::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.5); border-radius: 4px; }
+.table-container::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 .term-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px; /* CRITICAL: Forces the table to stay wide so columns don't squish */
+    min-width: 900px; /* Prevents column squishing */
+    text-align: left;
 }
 
-/* --- THE STICKY TICKER COLUMN --- */
+.term-table th, .term-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #334155;
+}
+
+/* Sticky Ticker Column */
 .term-table th:first-child,
 .term-table td:first-child {
     position: sticky;
     left: 0;
-    /* Change this hex code if your terminal background color is different! */
     background-color: #0f172a; 
-    z-index: 2; /* Keeps the ticker floating above the other scrolling data */
-    border-right: 2px solid #334155; /* Adds a shadow-like line to show it's sticky */
+    z-index: 2; 
+    border-right: 2px solid #334155; 
 }
+.term-table th:first-child { z-index: 3; }
 
-/* Ensure the top-left header stays above everything */
-.term-table th:first-child {
-    z-index: 3; 
-}
+/* Table Typography & Colors */
+.loading-text { text-align: center; color: var(--text-muted); font-style: italic; padding: 30px !important; }
+.profit { color: var(--profit); font-weight: bold; }
+.loss { color: var(--loss); font-weight: bold; }
+.symbol-badge { font-weight: 800; color: var(--symbol); }
 
 /* --- MOBILE SPECIFIC TWEAKS --- */
 @media (max-width: 768px) {
-    /* Reduce padding on mobile to give the table more screen space */
-    .cat-content {
-        padding: 12px !important; 
-    }
+    .cat-content { padding: 12px !important; }
     
-    /* Make the Summary numbers stack vertically so they don't get cut off */
     #portfolio-summary span {
         display: block;
         margin-bottom: 6px;
         margin-right: 0 !important;
     }
-    
-    #portfolio-summary span:last-child {
-        margin-bottom: 0;
-    }
+    #portfolio-summary span:last-child { margin-bottom: 0; }
 }
-
-.loading-text {
-    text-align: center;
-    color: #94a3b8;
-    font-style: italic;
-    padding: 30px !important;
-}
-
-.profit { color: #10b981; font-weight: bold; }
-.loss { color: #ef4444; font-weight: bold; }
-.symbol-badge { font-weight: 800; color: #3b82f6; }
