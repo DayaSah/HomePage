@@ -1,5 +1,6 @@
 // --- api.js : Dedicated Data Fetching & Processing ---
 
+// IMPORTANT: Replace this with your actual Render API URL
 const API_BASE = 'https://nepse-diary-api.onrender.com/api';
 
 // Helper formatting functions
@@ -8,112 +9,79 @@ const formatInt = (num) => parseInt(num).toLocaleString('en-IN');
 
 async function loadActivePortfolio() {
     const tbody = document.getElementById('active-portfolio-body');
+    const summaryElement = document.getElementById('portfolio-summary');
     if (!tbody) return; 
-
-    // --- UX UPGRADE: WAKE UP MESSAGE ---
-    tbody.innerHTML = `<tr><td colspan="6" class="loading-text">
-        <span style="color: #3b82f6;">Connecting to Cloud Data...</span><br>
-        <span style="font-size: 0.8em; color: #94a3b8; margin-top: 5px; display: inline-block;">
-            (If the server was asleep, this may take up to 50 seconds to boot up)
-        </span>
-    </td></tr>`;
     
     try {
-        // Fetch Portfolio and Cache simultaneously
-       
-        const [portfolioRes, cacheRes] = await Promise.all([
-            fetch(`${API_BASE}/portfolio`),
-            fetch(`${API_BASE}/cache`)
-        ]);
-
-        const portfolioJson = await portfolioRes.json();
-        const cacheJson = await cacheRes.json();
-
-        // 1. Map the Latest Traded Price (LTP) from the cache table
-        const ltpMap = {};
-        cacheJson.data.forEach(c => {
-            ltpMap[c.symbol] = parseFloat(c.ltp || 0); 
-        });
-
-        // 2. Calculate Active Holdings & WACC (Average Cost)
-        const holdings = {};
+        // Fetch the perfectly calculated data from your new backend endpoint
+        const response = await fetch(`${API_BASE}/active_portfolio`);
         
-        portfolioJson.data.forEach(trade => {
-            const sym = trade.symbol;
-            const qty = parseFloat(trade.qty) || 0;
-            const price = parseFloat(trade.price) || 0;
-            const type = trade.transaction_type.toUpperCase();
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const json = await response.json();
+        const activeData = json.data;
+        const summary = json.summary;
+
+        // 1. Render the Summary Header
+        if (summaryElement && summary) {
+            const totalPnlClass = summary.total_unrealized_pl >= 0 ? '#10b981' : '#ef4444';
+            const totalPnlSign = summary.total_unrealized_pl >= 0 ? '+' : '';
             
-            if (!holdings[sym]) {
-                holdings[sym] = { qty: 0, total_cost: 0 };
-            }
-
-            if (type === 'BUY') {
-                holdings[sym].qty += qty;
-                holdings[sym].total_cost += (qty * price);
-            } else if (type === 'SELL') {
-                if (holdings[sym].qty > 0) {
-                    const avgPrice = holdings[sym].total_cost / holdings[sym].qty;
-                    holdings[sym].qty -= qty;
-                    holdings[sym].total_cost -= (qty * avgPrice);
-                }
-            }
-        });
-
-        // 3. Render Table & Calculate Live P&L
-        tbody.innerHTML = '';
-        let totalPortfolioValue = 0;
-        let totalPortfolioCost = 0;
-        let activeStocksCount = 0;
-
-        for (const [sym, data] of Object.entries(holdings)) {
-            // Only render stocks you currently own (qty > 0)
-            if (data.qty > 0) {
-                activeStocksCount++;
-                const wacc = data.total_cost / data.qty;
-                const currentLtp = ltpMap[sym] || 0;
-                const currentValue = data.qty * currentLtp;
-                const pnl = currentValue - data.total_cost;
-                
-                totalPortfolioValue += currentValue;
-                totalPortfolioCost += data.total_cost;
-
-                const pnlClass = pnl >= 0 ? 'profit' : 'loss';
-                const pnlSign = pnl >= 0 ? '+' : '';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="symbol-badge">${sym}</td>
-                    <td class="num">${formatInt(data.qty)}</td>
-                    <td class="num">Rs. ${formatNum(wacc)}</td>
-                    <td class="num">${currentLtp ? 'Rs. ' + formatNum(currentLtp) : '<span style="color:#94a3b8;font-size:0.8em">N/A</span>'}</td>
-                    <td class="num">Rs. ${formatNum(currentValue)}</td>
-                    <td class="num ${pnlClass}">${pnlSign} Rs. ${formatNum(pnl)}</td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-
-        if (activeStocksCount === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="loading-text">No active holdings found in your portfolio.</td></tr>`;
-        }
-
-        // 4. Update the Dashboard Summary Header
-        const totalPnl = totalPortfolioValue - totalPortfolioCost;
-        const totalPnlClass = totalPnl >= 0 ? '#10b981' : '#ef4444';
-        const totalPnlSign = totalPnl >= 0 ? '+' : '';
-        
-        const summaryElement = document.getElementById('portfolio-summary');
-        if (summaryElement) {
             summaryElement.innerHTML = `
-                Equity: Rs. ${formatNum(totalPortfolioValue)} | 
-                <span style="color: ${totalPnlClass}">Unrealized: ${totalPnlSign}Rs. ${formatNum(totalPnl)}</span>
+                <span style="color: #94a3b8; margin-right: 10px;">Invested: Rs. ${formatNum(summary.total_invested)}</span>
+                <span style="color: #e2e8f0; margin-right: 10px; font-weight: bold;">Value: Rs. ${formatNum(summary.total_current_value)}</span>
+                <span style="color: ${totalPnlClass}; font-weight: bold;">
+                    Unrealized: ${totalPnlSign}Rs. ${formatNum(summary.total_unrealized_pl)} (${totalPnlSign}${formatNum(summary.total_pl_pct)}%)
+                </span>
             `;
         }
 
+        // 2. Render the Table Rows
+        tbody.innerHTML = '';
+
+        if (!activeData || activeData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" class="loading-text">No active holdings found in your portfolio.</td></tr>`;
+            return;
+        }
+
+        activeData.forEach(stock => {
+            const isProfit = stock.pl_amt >= 0;
+            const pnlClass = isProfit ? 'profit' : 'loss';
+            const pnlSign = isProfit ? '+' : '';
+            
+            // Subtle color intensity based on P/L % (like your Streamlit logic)
+            let opacity = 0.9;
+            const absPct = Math.abs(stock.pl_pct);
+            if (absPct <= 2) opacity = 0.4;
+            else if (absPct <= 5) opacity = 0.6;
+            else if (absPct <= 15) opacity = 0.8;
+            
+            const bgColor = isProfit ? `rgba(16, 185, 129, ${opacity * 0.3})` : `rgba(239, 68, 68, ${opacity * 0.3})`;
+            const textColor = isProfit ? '#10b981' : '#ef4444';
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="symbol-badge">${stock.symbol}</td>
+                <td class="num">${formatInt(stock.net_qty)}</td>
+                <td class="num">Rs. ${formatNum(stock.wacc)}</td>
+                <td class="num" style="color: #94a3b8;">Rs. ${formatNum(stock.breakeven)}</td>
+                <td class="num" style="font-weight: bold;">Rs. ${formatNum(stock.ltp)}</td>
+                <td class="num">Rs. ${formatNum(stock.current_val)}</td>
+                <td class="num" style="background-color: ${bgColor}; color: ${textColor}; font-weight: bold;">
+                    ${pnlSign}Rs. ${formatNum(stock.pl_amt)}
+                </td>
+                <td class="num ${pnlClass}">${pnlSign}${formatNum(stock.pl_pct)}%</td>
+                <td class="num" style="color: #cbd5e1;">${formatNum(stock.weight)}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
     } catch (error) {
         console.error("API Fetch Error:", error);
-        tbody.innerHTML = `<tr><td colspan="6" class="loading-text" style="color: #ef4444;">⚠️ Failed to load database securely. Check console.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="loading-text" style="color: #ef4444;">⚠️ Failed to load data securely. Is your Render API live?</td></tr>`;
+        if (summaryElement) summaryElement.innerHTML = `<span style="color: #ef4444;">Connection Error</span>`;
     }
 }
 
