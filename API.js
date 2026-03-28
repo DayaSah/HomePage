@@ -87,3 +87,26 @@ async function loadActivePortfolio() {
 
 // Auto-run when the script loads
 document.addEventListener('DOMContentLoaded', loadActivePortfolio);
+
+document.getElementById('sync-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sync-btn');
+    btn.innerText = "Syncing...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
+        const result = await response.json();
+        
+        // Tell the user it's working
+        alert("Sync started! Grab a coffee, the dashboard will reflect changes soon.");
+        
+        // Optionally, reload the portfolio data after 30 seconds
+        setTimeout(loadActivePortfolio, 30000); 
+
+    } catch (error) {
+        alert("Failed to start sync.");
+    } finally {
+        btn.innerText = "Sync Data";
+        btn.disabled = false;
+    }
+});
