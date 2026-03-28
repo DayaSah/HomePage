@@ -51,7 +51,7 @@ async function loadActivePortfolio() {
             const pnlClass = isProfit ? 'profit' : 'loss';
             const pnlSign = isProfit ? '+' : '';
             
-            // Subtle color intensity based on P/L % (like your Streamlit logic)
+            // Subtle color intensity based on P/L %
             let opacity = 0.9;
             const absPct = Math.abs(stock.pl_pct);
             if (absPct <= 2) opacity = 0.4;
@@ -88,63 +88,43 @@ async function loadActivePortfolio() {
 // Auto-run when the script loads
 document.addEventListener('DOMContentLoaded', loadActivePortfolio);
 
-document.getElementById('sync-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('sync-btn');
-    btn.innerText = "Syncing...";
-    btn.disabled = true;
-
-    try {
-        const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
-        const result = await response.json();
-        
-        // Tell the user it's working
-        alert("Sync started! Grab a coffee, the dashboard will reflect changes soon.");
-        
-        // Optionally, reload the portfolio data after 30 seconds
-        setTimeout(loadActivePortfolio, 30000); 
-
-    } catch (error) {
-        alert("Failed to start sync.");
-    } finally {
-        btn.innerText = "Sync Data";
-        btn.disabled = false;
-    }
-});
-// --- Manual Sync Trigger ---
+// --- Manual Sync Trigger (Single, Clean Event Listener) ---
 document.getElementById('sync-btn').addEventListener('click', async () => {
     const btn = document.getElementById('sync-btn');
     const originalContent = btn.innerHTML;
     
-    // UI Feedback: Show it's loading
-    btn.innerHTML = `<span style="color: #10b981;">🔄 Syncing...</span>`;
+    // 1. UI Feedback: Show it's loading instantly
+    btn.innerHTML = `<span style="color: #10b981;">🔄 Triggering GitHub...</span>`;
     btn.disabled = true;
     btn.style.borderColor = '#10b981';
 
     try {
-        // Ping the backend FastAPI background task
+        // 2. Ping your FastAPI backend. The Backend handles the PAT and talks to GitHub.
         const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
         
         if (response.ok) {
-            // Show success briefly
+            // 3. Show success briefly
             btn.innerHTML = `<span style="color: #10b981;">✅ Sync Started!</span>`;
             
-            // Reload the table data after 15 seconds to grab the freshly scraped data
+            // 4. GitHub Actions usually take 30-60 seconds to boot up, scrape, and save to Neon.
+            // We set a 45-second delay here before reloading the frontend table.
             setTimeout(() => {
                 loadActivePortfolio();
-            }, 15000); 
+            }, 45000); 
+            
         } else {
-            throw new Error("Failed to trigger sync");
+            throw new Error("Backend failed to trigger GitHub Action.");
         }
     } catch (error) {
         console.error("Sync Error:", error);
         btn.innerHTML = `<span style="color: #ef4444;">⚠️ Sync Failed</span>`;
         btn.style.borderColor = '#ef4444';
     } finally {
-        // Reset button after 4 seconds
+        // 5. Reset button UI after 5 seconds so the user isn't stuck staring at it
         setTimeout(() => {
             btn.innerHTML = originalContent;
             btn.disabled = false;
             btn.style.borderColor = 'rgba(34, 211, 238, 0.3)';
-        }, 4000);
+        }, 5000);
     }
 });
