@@ -19,23 +19,29 @@
     <div id="date">NEPSE ANALYST TERMINAL</div>
 
     <div class="search-container" style="display: flex; gap: 10px;">
-            <input type="text" id="searchInput" placeholder="Search NEPSE Tickers (e.g., NABIL)..." style="flex-grow: 1;">
-            
-            <button id="sync-btn" class="see-more-btn" style="width: auto; padding: 0 20px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: bold;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-                Sync Market
-            </button>
-        </div>
+        <input type="text" id="searchInput" placeholder="Search NEPSE Tickers (e.g., NABIL)..." style="flex-grow: 1;">
+        
+        <button id="sync-btn" class="see-more-btn" style="width: auto; padding: 0 20px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: bold;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Sync Market
+        </button>
+    </div>
 
     <main class="dashboard">
+        
         <section class="category">
             <div class="cat-bg"></div>
             <div class="cat-content">
                 <h2>AI Intelligence</h2>
-                <ul class="links" id="ai-links"></ul>
-                <button class="see-more-btn" id="seeMoreBtn">See More ▼</button>
+                <ul class="links" id="ai-links">
+                    
+                    <div class="hidden-links" id="ai-extra" style="display: none;">
+                        
+                        </div>
+                </ul>
+                <button class="see-more-btn" onclick="toggleLinks('ai-extra', this)">See More ▼</button>
             </div>
         </section>
 
@@ -47,19 +53,17 @@
                     <li><a href="https://github.com/Jagdishsah" target="_blank">GitHub</a></li>
                     <li><a href="https://colab.research.google.com/" target="_blank">Google Colab</a></li>
                     <li><a href="https://console.neon.tech/app/projects/silent-tree-13520884" target="_blank">Neon Database</a></li>
-                    
                     <li><a href="https://cloud.mongodb.com/v2/6999680a19579ae5ca555468#/explorer" target="_blank">Mongo DB</a></li>
                     <li><a href="https://supabase.com/dashboard/project/taolqfpiterwekgduaeo" target="_blank">SupaBase</a></li>
-                    <li><a href="https://huggingface.co" target="_blank">Hugging Face</a></li>
-                    <li><a href="https://dashboard.render.com/" target="_blank">Render API</a></li>
-                    <div class="hidden-links" id="extra-links">
-                    <li><a href="https://chatgpt.com/codex" target="_blank">Codex By ChatGPT</a></li>
-
-
+                    
+                    <div class="hidden-links" id="dev-extra" style="display: none;">
+                        <li><a href="https://huggingface.co" target="_blank">Hugging Face</a></li>
+                        <li><a href="https://dashboard.render.com/" target="_blank">Render API</a></li>
+                        <li><a href="https://chatgpt.com/codex" target="_blank">Codex By ChatGPT</a></li>
                         
-                    </div>
+                        </div>
                 </ul>
-                 <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+                <button class="see-more-btn" onclick="toggleLinks('dev-extra', this)">See More ▼</button>
             </div>
         </section>
 
@@ -73,15 +77,13 @@
                     <li><a href="https://nepsealpha.com/floorsheet-history" target="_blank">NepseAlpha Stock Holding</a></li>
                     <li><a href="https://chukul.com" target="_blank">Chukul</a></li>
                     <li><a href="https://chukul.com/chart" target="_blank">Chukul Chart</a></li>
-                    <div class="hidden-links" id="extra-links">
-                    <li><a href="https://sharesansar.com" target="_blank">ShareSansar</a></li>
-
-
-
+                    
+                    <div class="hidden-links" id="market-extra" style="display: none;">
+                        <li><a href="https://sharesansar.com" target="_blank">ShareSansar</a></li>
                         
-               </div>
+                        </div>
                 </ul>
-                <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+                <button class="see-more-btn" onclick="toggleLinks('market-extra', this)">See More ▼</button>
             </div>
         </section>
 
@@ -95,17 +97,15 @@
                     <li><a href="https://nepse-diary-neon.streamlit.app/" target="_blank">My_Nepse_Diary_NeonDb</a></li>
                     <li><a href="https://chatgptcodespace.streamlit.app/" target="_blank">TMS Ledger</a></li>
                     <li><a href="https://gogle-colab.streamlit.app/" target="_blank">Google Colab</a></li>
-                    <li><a href="https://jagdishsah.github.io/My_Work/" target="_blank">My Work Repo</a></li>
-                    <li><a href="https://nepse-data.streamlit.app/" target="_blank">Nepse Data Analysis</a></li>
-                    <li><a href="https://tms-trade-integration.streamlit.app/" target="_blank">TMS_Trade_Integration</a></li>
-                    <div class="hidden-links" id="extra-links">
-
-
-
+                    
+                    <div class="hidden-links" id="deploy-extra" style="display: none;">
+                        <li><a href="https://jagdishsah.github.io/My_Work/" target="_blank">My Work Repo</a></li>
+                        <li><a href="https://nepse-data.streamlit.app/" target="_blank">Nepse Data Analysis</a></li>
+                        <li><a href="https://tms-trade-integration.streamlit.app/" target="_blank">TMS_Trade_Integration</a></li>
                         
-                </div>
+                        </div>
                 </ul>
-                <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+                <button class="see-more-btn" onclick="toggleLinks('deploy-extra', this)">See More ▼</button>
             </div>
         </section>
 
@@ -117,14 +117,14 @@
                     <li><a href="https://www.tradingview.com" target="_blank">TradingView</a></li>
                     <li><a href="https://coinmarketcap.com" target="_blank">CoinMarketCap</a></li>
                     <li><a href="https://www.bloomberg.com/markets" target="_blank">Bloomberg Markets</a></li>
-                    <li><a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a></li>
-                    <li><a href="https://www.investing.com" target="_blank">Investing.com</a></li>
-
-                    <div class="hidden-links" id="extra-links">
-
-                    </div>
+                    
+                    <div class="hidden-links" id="global-extra" style="display: none;">
+                        <li><a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a></li>
+                        <li><a href="https://www.investing.com" target="_blank">Investing.com</a></li>
+                        
+                        </div>
                 </ul>
-                <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+                <button class="see-more-btn" onclick="toggleLinks('global-extra', this)">See More ▼</button>
             </div>
         </section>
 
@@ -138,8 +138,9 @@
                     <li><a href="https://nepsechart.com" target="_blank">Nepse Chart (SystemXlite)</a></li>
                     <li><a href="https://arthasarokar.com" target="_blank">Artha Sarokar</a></li>
                     <li><a href="https://sastoshare.com" target="_blank">Sastoshare</a></li>
-                    <div class="hidden-links" id="extra-links">
-                        <li><a href="https://www.nepalstock.com.np" target="_blank">NEPSE Official</a></li>             
+                    
+                    <div class="hidden-links" id="additional-extra" style="display: none;">
+                        <li><a href="https://www.nepalstock.com.np" target="_blank">NEPSE Official</a></li>               
                         <li><a href="https://www.nepalipaisa.com" target="_blank">Nepali Paisa</a></li>
                         <li><a href="https://bizmandu.com" target="_blank">Bizmandu</a></li>
                         <li><a href="https://www.nrb.org.np" target="_blank">Nepal Rastra Bank (NRB)</a></li>
@@ -149,9 +150,10 @@
                         <li><a href="https://financialnotices.com" target="_blank">Financial Notices</a></li>
                         <li><a href="https://bankingkhabar.com" target="_blank">Banking Khabar</a></li>
                         <li><a href="https://meroshare.cdsc.com.np" target="_blank">MeroShare Login</a></li>
-                    </div>
+                        
+                        </div>
                 </ul>
-                <button class="see-more-btn" id="seeMoreExtraBtn" onclick="toggleLinks()">See More ▼</button>
+                <button class="see-more-btn" onclick="toggleLinks('additional-extra', this)">See More ▼</button>
             </div>
         </section>
     </main>
@@ -160,38 +162,40 @@
         <h1 id="greetingText">Welcome, Analyst.</h1>
         <p id="greetingSubtext">Systems are online and ready.</p>
     </div>
-<section class="portfolio-widget" style="grid-column: 1 / -1; margin-top: 20px;">
-            <div class="cat-bg"></div>
-            <div class="cat-content" style="padding: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                    <h2 style="margin: 0;">Active Holdings</h2>
-                    <div id="portfolio-summary" style="font-size: 0.85rem; background: rgba(30, 41, 59, 0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid #334155;">
-                        <span style="color: #94a3b8;">Authenticating API...</span>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <table class="term-table">
-                        <thead>
-                            <tr>
-                                <th>Ticker</th>
-                                <th class="num">Units</th>
-                                <th class="num">WACC</th>
-                                <th class="num">Breakeven</th>
-                                <th class="num">LTP</th>
-                                <th class="num">Current Value</th>
-                                <th class="num">Live P&L</th>
-                                <th class="num">P/L %</th>
-                                <th class="num">Weight</th>
-                            </tr>
-                        </thead>
-                        <tbody id="active-portfolio-body">
-                            <tr><td colspan="9" class="loading-text">Fetching live calculated data from Server...</td></tr>
-                        </tbody>
-                    </table>
+
+    <section class="portfolio-widget" style="grid-column: 1 / -1; margin-top: 20px;">
+        <div class="cat-bg"></div>
+        <div class="cat-content" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="margin: 0;">Active Holdings</h2>
+                <div id="portfolio-summary" style="font-size: 0.85rem; background: rgba(30, 41, 59, 0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid #334155;">
+                    <span style="color: #94a3b8;">Authenticating API...</span>
                 </div>
             </div>
-        </section>
+            
+            <div class="table-container">
+                <table class="term-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th class="num">Units</th>
+                            <th class="num">WACC</th>
+                            <th class="num">Breakeven</th>
+                            <th class="num">LTP</th>
+                            <th class="num">Current Value</th>
+                            <th class="num">Live P&L</th>
+                            <th class="num">P/L %</th>
+                            <th class="num">Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-portfolio-body">
+                        <tr><td colspan="9" class="loading-text">Fetching live calculated data from Server...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
     <script src="API.js"></script>
     <script src="homePage.js"></script>
 </body>
