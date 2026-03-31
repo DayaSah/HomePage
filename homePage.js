@@ -23,8 +23,9 @@ const bgImages = [
     'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1280',
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1280'
 ];
-document.body.style.backgroundImage = `linear-gradient(rgba(15,23,42,0.7), rgba(15,23,42,0.9)), url('${bgImages[Math.floor(Math.random()*bgImages.length)]}')`;
 
+
+document.body.style.backgroundImage = `linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('${bgImages[Math.floor(Math.random()*bgImages.length)]}')`;
 
 // ==========================================
 // --- PREMIUM ANALOG CLOCK LOGIC ---
@@ -119,40 +120,9 @@ function toggleLinks(elementId, btn) {
     }
 }
 
-const aiTools = [
-    {name: "Gemini Pro", url: "https://gemini.google.com/u/1/app"},
-    {name: "Gemini", url: "https://gemini.google.com"},
-    {name: "ChatGPT", url: "https://chatgpt.com"},
-    {name: "Perplexity", url: "https://perplexity.ai"},
-    {name: "Claude 3.5", url: "https://claude.ai"},
-    {name: "Deepseek", url: "https://chat.deepseek.com"},
-    {name: "Grok AI", url: "https://grok.com/"},
-    {name: "Bard AI", url: "https://bard.google.com"},
-    {name: "DALL·E", url: "https://openai.com/dall-e"},
-    {name: "Runway ML", url: "https://runwayml.com"}
-];
-const aiList = document.getElementById('ai-links');
-const seeMoreBtn = document.getElementById('seeMoreBtn');
-let expanded = false;
 
-function renderAILinks() {
-    if (!aiList) return;
-    aiList.innerHTML = '';
-    const toShow = expanded ? aiTools.length : 5;
-    aiTools.slice(0, toShow).forEach(tool => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = tool.url;
-        a.target = "_blank";
-        a.textContent = tool.name;
-        li.appendChild(a);
-        aiList.appendChild(li);
-    });
-    if (seeMoreBtn) {
-        seeMoreBtn.style.display = aiTools.length > 5 ? 'block' : 'none';
-        seeMoreBtn.textContent = expanded ? 'See Less ▲' : 'See More ▼';
-    }
-}
+
+
 
 if (seeMoreBtn) {
     seeMoreBtn.addEventListener('click', () => {
