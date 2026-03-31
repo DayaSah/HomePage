@@ -87,22 +87,38 @@ updateGreeting();
 
 
 // ==========================================
-// --- MULTI-TAB TICKER SEARCH ---
+// --- REFINED SEARCH & SYNC LOGIC ---
 // ==========================================
 const searchForm = document.getElementById('tickerSearchForm');
 const tickerInput = document.getElementById('tickerInput');
+const syncBtn = document.getElementById('sync-btn');
 
-if (searchForm) {
+if (searchForm && tickerInput) {
+    // ACTION 1: Pressing Enter (Opens ONLY the NepseAlpha Chart)
     searchForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
         const ticker = tickerInput.value.trim().toUpperCase();
         if (ticker) {
-            window.open(`https://nepsealpha.com/search?q=${ticker}`, '_blank');
-            window.open(`https://chukul.com/stock-profile?symbol=${ticker}`, '_blank');
+            window.open(`https://nepsealpha.com/trading/chart?symbol=${ticker}`, '_blank');
             tickerInput.value = '';
-            tickerInput.blur(); // Hides keyboard on mobile after search
+            tickerInput.blur();
         }
     });
+
+    // ACTION 2: Clicking Sync Market (Opens both Search and Chukul)
+    if (syncBtn) {
+        syncBtn.addEventListener('click', function() {
+            const ticker = tickerInput.value.trim().toUpperCase();
+            if (ticker) {
+                // Opens the standard search and the Chukul profile
+                window.open(`https://nepsealpha.com/search?q=${ticker}`, '_blank');
+                window.open(`https://chukul.com/stock-profile?symbol=${ticker}`, '_blank');
+                tickerInput.value = '';
+            } else {
+                alert("Please enter a ticker first (e.g., NHPC)");
+            }
+        });
+    }
 }
 
 
