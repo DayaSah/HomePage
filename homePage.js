@@ -105,16 +105,17 @@ if (searchForm) {
 
 
 // ==========================================
-// --- LINK TOGGLES & RENDERERS ---
+// --- UNIVERSAL LINK TOGGLE ---
 // ==========================================
-function toggleLinks() {
-    const hiddenLinks = document.getElementById('extra-links');
-    const btn = document.getElementById('seeMoreExtraBtn');
-    if (hiddenLinks.style.display === 'block') {
-        hiddenLinks.style.display = 'none';
+function toggleLinks(elementId, btn) {
+    const hiddenContainer = document.getElementById(elementId);
+    
+    // Check current display state
+    if (hiddenContainer.style.display === 'block') {
+        hiddenContainer.style.display = 'none';
         btn.innerHTML = 'See More ▼';
     } else {
-        hiddenLinks.style.display = 'block';
+        hiddenContainer.style.display = 'block';
         btn.innerHTML = 'See Less ▲';
     }
 }
