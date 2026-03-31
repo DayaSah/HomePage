@@ -100,6 +100,7 @@ if (searchForm) {
             window.open(`https://nepsealpha.com/search?q=${ticker}`, '_blank');
             window.open(`https://chukul.com/stock-profile?symbol=${ticker}`, '_blank');
             tickerInput.value = '';
+            tickerInput.blur(); // Hides keyboard on mobile after search
         }
     });
 }
@@ -122,12 +123,3 @@ function toggleLinks(elementId, btn) {
 
 
 
-
-
-if (seeMoreBtn) {
-    seeMoreBtn.addEventListener('click', () => {
-        expanded = !expanded;
-        renderAILinks();
-    });
-}
-renderAILinks();
