@@ -110,7 +110,6 @@ if (searchForm) {
 function toggleLinks(elementId, btn) {
     const hiddenContainer = document.getElementById(elementId);
     
-    // Check current display state
     if (hiddenContainer.style.display === 'block') {
         hiddenContainer.style.display = 'none';
         btn.innerHTML = 'See More ▼';
