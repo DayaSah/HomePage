@@ -80,13 +80,12 @@ body {
 }
 
 /* Hover effects only apply to devices with a mouse (prevents mobile sticky tap bugs) */
-@media (hover: hover) {
-    .see-more-btn:hover {
-        background: rgba(34, 211, 238, 0.2);
-        color: white;
+@media (max-width: 768px) {
+    .term-table {
+        font-size: 0.75rem; /* Shrink text slightly for mobile data density */
     }
-    .category:hover { 
-        transform: translateY(-10px); 
+    .term-table th, .term-table td {
+        padding: 8px 10px; /* Tighter padding */
     }
 }
 
