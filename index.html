@@ -18,32 +18,38 @@
     
     <div id="date">NEPSE ANALYST TERMINAL</div>
 
-    <div class="search-container" style="display: flex; gap: 10px;">
-        <input type="text" id="searchInput" placeholder="Search NEPSE Tickers (e.g., NABIL)..." style="flex-grow: 1;">
-        
-        <button id="sync-btn" class="see-more-btn" style="width: auto; padding: 0 20px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: bold;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            Sync Market
-        </button>
-    </div>
+    <form id="tickerSearchForm" class="search-container" style="display: flex; gap: 10px;">
+    <input type="text" id="tickerInput" placeholder="Search NEPSE Tickers (e.g., NABIL)..." style="flex-grow: 1;">
+    
+    <button type="submit" id="sync-btn" class="see-more-btn" style="width: auto; padding: 0 20px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: bold;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        Sync Market
+    </button>
+</form>
 
     <main class="dashboard">
         
         <section class="category">
-            <div class="cat-bg"></div>
-            <div class="cat-content">
-                <h2>AI Intelligence</h2>
-                <ul class="links" id="ai-links">
-                    
-                    <div class="hidden-links" id="ai-extra" style="display: none;">
-                        
-                        </div>
-                </ul>
-                <button class="see-more-btn" onclick="toggleLinks('ai-extra', this)">See More ▼</button>
+    <div class="cat-bg"></div>
+    <div class="cat-content">
+        <h2>AI Intelligence</h2>
+        <ul class="links">
+            <li><a href="https://gemini.google.com" target="_blank">Gemini Pro</a></li>
+            <li><a href="https://chatgpt.com" target="_blank">ChatGPT</a></li>
+            <li><a href="https://perplexity.ai" target="_blank">Perplexity</a></li>
+            <li><a href="https://claude.ai" target="_blank">Claude 3.5</a></li>
+            
+            <div class="hidden-links" id="ai-extra" style="display: none;">
+                <li><a href="https://chat.deepseek.com" target="_blank">Deepseek</a></li>
+                <li><a href="https://grok.com/" target="_blank">Grok AI</a></li>
+                <li><a href="https://openai.com/dall-e" target="_blank">DALL·E</a></li>
             </div>
-        </section>
+        </ul>
+        <button class="see-more-btn" onclick="toggleLinks('ai-extra', this)">See More ▼</button>
+    </div>
+</section>
 
         <section class="category">
             <div class="cat-bg"></div>
