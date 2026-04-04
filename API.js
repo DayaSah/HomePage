@@ -36,34 +36,35 @@ async function loadActivePortfolio() {
         // 2. Table Body (10 Columns)
         tbody.innerHTML = '';
         activeData.forEach(stock => {
-            const isProfit = stock.real_pl_amt >= 0;
-            const pnlClass = isProfit ? 'profit' : 'loss';
-            const pnlSign = isProfit ? '+' : '';
-            
-            // Breakeven logic using WACC + Exit Charges
-            const breakeven = (stock.total_cost + stock.exit_charges_inclusive_tax) / stock.net_qty;
+    const isProfit = stock.real_pl_amt >= 0;
+    const pnlClass = isProfit ? 'profit' : 'loss';
+    const pnlSign = isProfit ? '+' : '';
+    
+    // Accurate Breakeven Calculation
+    const breakeven = (stock.total_cost + stock.exit_charges_inclusive_tax) / stock.net_qty;
 
-            // Row styling
-            let opacity = 0.1;
-            if (Math.abs(stock.real_pl_pct) > 5) opacity = 0.2;
-            const bgColor = isProfit ? `rgba(16, 185, 129, ${opacity})` : `rgba(239, 68, 68, ${opacity})`;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="symbol-badge">${stock.symbol}</td>
-                <td class="num">${formatInt(stock.net_qty)}</td>
-                <td class="num">Rs. ${formatNum(stock.wacc)}</td>
-                <td class="num" style="color: #64748b; font-size: 0.8rem;">Rs. ${formatNum(breakeven)}</td>
-                <td class="num" style="font-weight: bold; color: #3b82f6;">Rs. ${formatNum(stock.ltp)}</td>
-                <td class="num" style="color: #94a3b8;">Rs. ${formatNum(stock.total_cost)}</td> <td class="num">Rs. ${formatNum(stock.receivable_val)}</td>
-                <td class="num" style="background-color: ${bgColor}; font-weight: bold; color: ${isProfit ? '#10b981' : '#ef4444'};">
-                    ${pnlSign}Rs. ${formatNum(stock.real_pl_amt)}
-                </td>
-                <td class="num ${pnlClass}">${pnlSign}${formatNum(stock.real_pl_pct)}%</td>
-                <td class="num" style="color: #64748b;">${formatNum(stock.weight)}%</td>
-            `;
-            tbody.appendChild(tr);
-        });
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td class="symbol-badge">${stock.symbol}</td>
+        <td class="num">${formatInt(stock.net_qty)}</td>
+        <td class="num">Rs. ${formatNum(stock.wacc)}</td>
+        <td class="num" style="color: #64748b; font-size: 0.8rem;">Rs. ${formatNum(breakeven)}</td>
+        <td class="num" style="font-weight: bold; color: #3b82f6;">Rs. ${formatNum(stock.ltp)}</td>
+        
+        <td class="num" style="color: #94a3b8;">Rs. ${formatNum(stock.total_cost)}</td>
+        
+        <td class="num">Rs. ${formatNum(stock.receivable_val)}</td>
+        
+        <td class="num" style="font-weight: bold; color: ${isProfit ? '#10b981' : '#ef4444'};">
+            ${pnlSign}Rs. ${formatNum(stock.real_pl_amt)}
+        </td>
+        
+        <td class="num ${pnlClass}">${pnlSign}${formatNum(stock.real_pl_pct)}%</td>
+        
+        <td class="num" style="color: #64748b;">${formatNum(stock.weight)}%</td>
+    `;
+    tbody.appendChild(tr);
+});
 
     } catch (error) {
         tbody.innerHTML = `<tr><td colspan="10" class="loading-text">⚠️ API Error</td></tr>`;
