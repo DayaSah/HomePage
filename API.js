@@ -88,43 +88,63 @@ async function loadActivePortfolio() {
 // Auto-run when the script loads
 document.addEventListener('DOMContentLoaded', loadActivePortfolio);
 
-// --- Manual Sync Trigger (Single, Clean Event Listener) ---
-document.getElementById('sync-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('sync-btn');
-    const originalContent = btn.innerHTML;
-    
-    // 1. UI Feedback: Show it's loading instantly
-    btn.innerHTML = `<span style="color: #10b981;">🔄 Triggering GitHub...</span>`;
-    btn.disabled = true;
-    btn.style.borderColor = '#10b981';
+// --- NEW: Manual Price Refresh Logic ---
+const refreshPriceBtn = document.getElementById('refresh-price-btn');
 
-    try {
-        // 2. Ping your FastAPI backend. The Backend handles the PAT and talks to GitHub.
-        const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
-        
-        if (response.ok) {
-            // 3. Show success briefly
-            btn.innerHTML = `<span style="color: #10b981;">✅ Sync Started!</span>`;
+if (refreshPriceBtn) {
+    refreshPriceBtn.addEventListener('click', async () => {
+        const originalContent = refreshPriceBtn.innerHTML;
+        refreshPriceBtn.innerHTML = `<span>⏳ Updating...</span>`;
+        refreshPriceBtn.disabled = true;
+
+        try {
+            // This calls your new /refresh-ltp endpoint in FastAPI
+            const response = await fetch(`${API_BASE}/refresh-ltp`, { method: 'POST' });
             
-            // 4. GitHub Actions usually take 30-60 seconds to boot up, scrape, and save to Neon.
-            // We set a 45-second delay here before reloading the frontend table.
+            if (response.ok) {
+                refreshPriceBtn.innerHTML = `<span>✅ Prices Updated!</span>`;
+                // Wait 2 seconds for the background task to start, then reload table
+                setTimeout(() => {
+                    loadActivePortfolio();
+                }, 2000);
+            } else {
+                throw new Error("Price refresh failed");
+            }
+        } catch (error) {
+            console.error("Refresh Error:", error);
+            refreshPriceBtn.innerHTML = `<span style="color: #ef4444;">⚠️ Error</span>`;
+        } finally {
             setTimeout(() => {
-                loadActivePortfolio();
-            }, 45000); 
-            
-        } else {
-            throw new Error("Backend failed to trigger GitHub Action.");
+                refreshPriceBtn.innerHTML = originalContent;
+                refreshPriceBtn.disabled = false;
+            }, 3000);
         }
-    } catch (error) {
-        console.error("Sync Error:", error);
-        btn.innerHTML = `<span style="color: #ef4444;">⚠️ Sync Failed</span>`;
-        btn.style.borderColor = '#ef4444';
-    } finally {
-        // 5. Reset button UI after 5 seconds so the user isn't stuck staring at it
-        setTimeout(() => {
-            btn.innerHTML = originalContent;
-            btn.disabled = false;
-            btn.style.borderColor = 'rgba(34, 211, 238, 0.3)';
-        }, 5000);
-    }
-});
+    });
+}
+
+// --- UPDATED: GitHub Sync Logic (Cleanup) ---
+// Note: I renamed the label to "Sync Trades" to avoid confusion with "Live Price"
+const syncBtn = document.getElementById('sync-btn');
+if (syncBtn) {
+    syncBtn.addEventListener('click', async () => {
+        const originalContent = syncBtn.innerHTML;
+        syncBtn.innerHTML = `<span>🔄 Scouring GitHub...</span>`;
+        syncBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
+            if (response.ok) {
+                syncBtn.innerHTML = `<span>✅ Sync Queued</span>`;
+                // GitHub takes longer (scraping + db save), so wait 30s
+                setTimeout(() => { loadActivePortfolio(); }, 30000);
+            }
+        } catch (error) {
+            syncBtn.innerHTML = `<span>⚠️ Failed</span>`;
+        } finally {
+            setTimeout(() => {
+                syncBtn.innerHTML = originalContent;
+                syncBtn.disabled = false;
+            }, 5000);
+        }
+    });
+}
