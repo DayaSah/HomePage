@@ -1,4 +1,9 @@
 // ==========================================
+// --- DEVELOPER SIGNATURE ---
+// ==========================================
+console.log("%c NEPSE Terminal v2.0 - Developed by Jagdish Sah 🌹 ", "background: #0f172a; color: #10b981; font-size: 14px; font-weight: bold; border-radius: 4px; padding: 4px;");
+
+// ==========================================
 // --- BACKGROUND RANDOMIZERS ---
 // ==========================================
 
@@ -23,7 +28,6 @@ const bgImages = [
     'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1280',
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1280'
 ];
-
 
 document.body.style.backgroundImage = `linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('${bgImages[Math.floor(Math.random()*bgImages.length)]}')`;
 
@@ -54,9 +58,11 @@ function setClock() {
     if (secondHand) secondHand.style.transform = `rotate(${secondsRatio * 360}deg)`;
     if (minuteHand) minuteHand.style.transform = `rotate(${minutesRatio * 360}deg)`;
     if (hourHand) hourHand.style.transform = `rotate(${hoursRatio * 360}deg)`;
+
+    // OPTIMIZATION: requestAnimationFrame is much smoother than setInterval for UI rendering
+    requestAnimationFrame(setClock);
 }
-setInterval(setClock, 1000);
-setClock(); 
+requestAnimationFrame(setClock); 
 
 
 // ==========================================
@@ -81,44 +87,44 @@ function updateGreeting() {
     const dateOpts = { weekday: 'long', month: 'long', day: 'numeric' };
     const dateString = new Date().toLocaleDateString('en-US', dateOpts);
     
-    greetingSubtext.innerText = `Today is ${dateString}. Market connections are standing by.`;
+    // NEPSE Market Status Indicator (11 AM to 3 PM)
+    const isMarketOpen = (hour >= 11 && hour < 15);
+    const marketStatus = isMarketOpen 
+        ? '<span style="color: #10b981; font-weight: bold;">● Market Open</span>' 
+        : '<span style="color: #64748b; font-weight: bold;">○ Market Closed</span>';
+
+    greetingSubtext.innerHTML = `Today is ${dateString}.<br>Systems online | ${marketStatus}`;
 }
 updateGreeting();
+// Refresh greeting every minute in case the market opens/closes while the tab is open
+setInterval(updateGreeting, 60000);
 
 
 // ==========================================
-// --- REFINED SEARCH & SYNC LOGIC ---
+// --- REFINED SEARCH LOGIC ---
 // ==========================================
 const searchForm = document.getElementById('tickerSearchForm');
 const tickerInput = document.getElementById('tickerInput');
-const syncBtn = document.getElementById('sync-btn');
 
 if (searchForm && tickerInput) {
-    // ACTION 1: Pressing Enter (Opens ONLY the NepseAlpha Chart)
+    // ACTION: Pressing Enter validates and opens NepseAlpha Chart
     searchForm.addEventListener('submit', function(e) {
         e.preventDefault(); 
         const ticker = tickerInput.value.trim().toUpperCase();
+        
+        // Simple Validation: NEPSE Tickers are usually 3+ characters
+        if (ticker.length < 3) {
+            tickerInput.style.borderColor = "#ef4444"; // Flash red for error
+            setTimeout(() => tickerInput.style.borderColor = "", 1500);
+            return;
+        }
+
         if (ticker) {
             window.open(`https://nepsealpha.com/trading/chart?symbol=${ticker}`, '_blank');
             tickerInput.value = '';
             tickerInput.blur();
         }
     });
-
-    // ACTION 2: Clicking Sync Market (Opens both Search and Chukul)
-    if (syncBtn) {
-        syncBtn.addEventListener('click', function() {
-            const ticker = tickerInput.value.trim().toUpperCase();
-            if (ticker) {
-                // Opens the standard search and the Chukul profile
-                window.open(`https://nepsealpha.com/search?q=${ticker}`, '_blank');
-                window.open(`https://chukul.com/stock-profile?symbol=${ticker}`, '_blank');
-                tickerInput.value = '';
-            } else {
-                alert("Please enter a ticker first (e.g., NHPC)");
-            }
-        });
-    }
 }
 
 
@@ -136,6 +142,3 @@ function toggleLinks(elementId, btn) {
         btn.innerHTML = 'See Less ▲';
     }
 }
-
-
-
