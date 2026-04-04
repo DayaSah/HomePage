@@ -210,7 +210,7 @@
             const tbody = document.getElementById('history-body');
             try {
                 // Adjust this endpoint if your actual history endpoint is named differently (e.g., /trade_history)
-                const response = await fetch(`${API_BASE}/history`);
+                const response = await fetch(`${API_BASE}/trade_history`);
                 
                 if (!response.ok) throw new Error("Failed to fetch history");
                 
