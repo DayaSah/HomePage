@@ -3,192 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEPSE Trade History | Analyst Jagdish</title>
+    <title>NEPSE Trade History | Dashboard</title>
     <style>
         :root {
-            --bg-color: #0b0f1a;
-            --panel-bg: rgba(23, 32, 53, 0.8);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #10b981;
-            --accent-red: #f43f5e;
-            --border: #1e293b;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --primary: #38bdf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #334155;
         }
 
         body {
-            margin: 0; padding: 20px; font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color); color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
         }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .back-btn { color: var(--accent-blue); text-decoration: none; border: 1px solid var(--accent-blue); padding: 5px 12px; border-radius: 4px; font-size: 0.9rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        /* Dashboard Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--panel-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
-        .stat-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-value { font-size: 1.4rem; font-weight: bold; font-family: monospace; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
 
-        /* Analysis Feedback */
-        .analysis-box { background: rgba(56, 189, 248, 0.05); border-left: 4px solid var(--accent-blue); padding: 15px; margin-bottom: 25px; border-radius: 4px; }
-        .honest-note { font-style: italic; color: var(--text-muted); font-size: 0.9rem; }
+        h1 { color: var(--primary); margin: 0; }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .card h3 { margin: 0 0 10px 0; font-size: 0.9rem; color: #94a3b8; }
+        .card p { margin: 0; font-size: 1.5rem; font-weight: bold; }
 
         /* Tables */
-        .section-title { font-size: 1.1rem; color: var(--accent-blue); margin: 30px 0 10px 0; display: flex; align-items: center; gap: 10px; }
-        .table-container { background: var(--panel-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { background: rgba(0,0,0,0.3); color: var(--text-muted); text-align: left; padding: 12px; }
-        td { padding: 12px; border-top: 1px solid var(--border); }
-        .num { font-family: monospace; text-align: right; }
-        .win { color: var(--accent-green); }
-        .loss { color: var(--accent-red); }
-        .remark-cell { font-size: 0.75rem; color: var(--text-muted); max-width: 250px; }
-        
-        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: #334155; }
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { background: rgba(0, 0, 0, 0.2); color: var(--primary); }
+
+        .profit { color: var(--success); font-weight: bold; }
+        .loss { color: var(--danger); font-weight: bold; }
+
+        .remarks { font-style: italic; color: #94a3b8; font-size: 0.8rem; max-width: 300px; }
+
+        .loading { text-align: center; padding: 50px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
+<div class="container">
     <header>
-        <div>
-            <h1 style="margin:0; font-size: 1.5rem;">Trade History Ledger</h1>
-            <div id="sync-status" style="font-size: 0.8rem; color: var(--text-muted);">Connecting to API...</div>
-        </div>
-        <a href="index.html" class="back-btn">← Terminal</a>
+        <h1>Trade Portfolio History</h1>
+        <div id="last-updated"></div>
     </header>
 
-    <div class="stats-grid" id="summary-grid">
-        <div class="stat-card">
-            <div class="stat-label">Total Realized P/L</div>
-            <div class="stat-value" id="stat-pl">--</div>
+    <div id="summary" class="summary-grid">
         </div>
-        <div class="stat-card">
-            <div class="stat-label">Win Rate</div>
-            <div class="stat-value" id="stat-winrate">--</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Open / Closed Lots</div>
-            <div class="stat-value" id="stat-lots">--</div>
-        </div>
-    </div>
 
-    <div class="analysis-box" id="analysis-text">
-        <div class="stat-label">Systematic Critique</div>
-        <div class="honest-note" id="critique-content">Analyzing your trade behavior...</div>
-    </div>
-
-    <div class="section-title">📉 Realized History (Closed Trades)</div>
     <div class="table-container">
+        <h2 class="section-title">Realized Trade History</h2>
         <table>
             <thead>
                 <tr>
                     <th>Symbol</th>
                     <th>Qty</th>
-                    <th>Buy/Sell Date</th>
-                    <th class="num">Avg Buy</th>
-                    <th class="num">Avg Sell</th>
-                    <th class="num">Net P/L</th>
-                    <th class="num">ROI%</th>
+                    <th>Buy Date</th>
+                    <th>Sell Date</th>
+                    <th>Buy Rate</th>
+                    <th>Sell Rate</th>
+                    <th>Net P/L</th>
+                    <th>ROI%</th>
                     <th>Remarks</th>
                 </tr>
             </thead>
-            <tbody id="realized-body"></tbody>
+            <tbody id="realized-body">
+                <tr><td colspan="9" class="loading">Fetching trade data...</td></tr>
+            </tbody>
         </table>
     </div>
 
-    <div class="section-title">🕒 Unrealized Lots (Current Holdings)</div>
     <div class="table-container">
+        <h2 class="section-title">Current Holdings (Unrealized)</h2>
         <table>
             <thead>
                 <tr>
                     <th>Symbol</th>
                     <th>Qty</th>
-                    <th>Entry Date</th>
-                    <th class="num">Buy Rate</th>
-                    <th class="num">Current LTP</th>
-                    <th>Logic / Remark</th>
+                    <th>Buy Date</th>
+                    <th>Buy Rate</th>
+                    <th>LTP</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
-            <tbody id="unrealized-body"></tbody>
+            <tbody id="unrealized-body">
+                </tbody>
         </table>
     </div>
+</div>
 
-    <script>
-        const API_URL = 'https://nepse-diary-api.onrender.com/api/active_portfolio';
-
-        async function loadHistory() {
-            try {
-                const response = await fetch(API_URL);
-                const json = await response.json();
-                if (json.status === "success") {
-                    renderSummary(json.summary);
-                    renderRealized(json.realized_history);
-                    renderUnrealized(json.unrealized_lots);
-                    generateCritique(json.realized_history);
-                    document.getElementById('sync-status').innerText = `Last Sync: ${new Date().toLocaleTimeString()}`;
-                }
-            } catch (e) {
-                document.getElementById('sync-status').innerText = "API Error: Connection Failed";
-                console.error(e);
-            }
-        }
-
-        function renderSummary(s) {
-            const plElem = document.getElementById('stat-pl');
-            plElem.innerText = `Rs. ${s.total_realized_pl.toLocaleString()}`;
-            plElem.className = 'stat-value ' + (s.total_realized_pl >= 0 ? 'win' : 'loss');
+<script>
+    async function fetchTradeHistory() {
+        const apiUrl = 'https://nepse-diary-api.onrender.com/api/trade_history';
+        
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
             
-            document.getElementById('stat-winrate').innerText = s.win_rate;
-            document.getElementById('stat-lots').innerText = `${s.total_open_lots} / ${s.total_closed_lots}`;
-        }
-
-        function renderRealized(data) {
-            const body = document.getElementById('realized-body');
-            body.innerHTML = data.map(t => `
-                <tr>
-                    <td><span class="badge">${t.symbol}</span></td>
-                    <td>${t.qty}</td>
-                    <td style="font-size:0.7rem; color:var(--text-muted)">${t.buy_date} → ${t.sell_date}</td>
-                    <td class="num">${t.buy_rate.toFixed(1)}</td>
-                    <td class="num">${t.sell_rate.toFixed(1)}</td>
-                    <td class="num ${t.net_pl >= 0 ? 'win' : 'loss'}">${t.net_pl.toFixed(2)}</td>
-                    <td class="num ${t.roi_pct >= 0 ? 'win' : 'loss'}">${t.roi_pct.toFixed(2)}%</td>
-                    <td class="remark-cell">${t.remarks || '-'}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderUnrealized(data) {
-            const body = document.getElementById('unrealized-body');
-            body.innerHTML = data.map(t => `
-                <tr>
-                    <td><span class="badge" style="background:#1e293b; color:var(--accent-blue)">${t.symbol}</span></td>
-                    <td>${t.qty}</td>
-                    <td>${t.buy_date}</td>
-                    <td class="num">${t.buy_rate.toFixed(1)}</td>
-                    <td class="num">${t.ltp.toFixed(1)}</td>
-                    <td class="remark-cell" style="color: var(--accent-green)">${t.remark || '-'}</td>
-                </tr>
-            `).join('');
-        }
-
-        function generateCritique(history) {
-            const content = document.getElementById('critique-content');
-            // Honest analysis logic
-            const gamblingTrades = history.filter(t => t.remarks.toLowerCase().includes('gamble') || t.remarks.toLowerCase().includes('fomo')).length;
-            const panicSells = history.filter(t => t.remarks.toLowerCase().includes('scary cat') || t.remarks.toLowerCase().includes('too early')).length;
-
-            if (gamblingTrades > 2) {
-                content.innerHTML = `<span style="color:var(--accent-red)">CRITICAL:</span> Stop chasing circuits. Your notes show ${gamblingTrades} trades were "Gambles/FOMO". You are a BCT engineer, not a gambler. Stick to the technical setup or your win rate will keep dropping.`;
-            } else if (panicSells > 0) {
-                content.innerHTML = `You have "Scary Cat" tendencies on ${panicSells} trades. You are exiting profitable setups too early just to see a green number. Trust your stop-loss and let the impulse run.`;
-            } else {
-                content.innerHTML = "Execution is becoming more systematic. Continue documenting remarks for every trade; it's the only way to kill the emotional trader inside.";
+            if (data.status === "success") {
+                renderSummary(data.summary);
+                renderRealized(data.realized_history);
+                renderUnrealized(data.unrealized_lots);
+                document.getElementById('last-updated').innerText = new Date().toLocaleDateString();
             }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            document.getElementById('realized-body').innerHTML = `<tr><td colspan="9" style="color:red; text-align:center;">Failed to load data. API might be sleeping.</td></tr>`;
         }
+    }
 
-        loadHistory();
-    </script>
+    function renderSummary(summary) {
+        const summaryDiv = document.getElementById('summary');
+        const plClass = summary.total_realized_pl >= 0 ? 'profit' : 'loss';
+        
+        summaryDiv.innerHTML = `
+            <div class="card"><h3>Total Realized P/L</h3><p class="${plClass}">Rs. ${summary.total_realized_pl.toLocaleString()}</p></div>
+            <div class="card"><h3>Win Rate</h3><p style="color: var(--primary)">${summary.win_rate}</p></div>
+            <div class="card"><h3>Closed Lots</h3><p>${summary.total_closed_lots}</p></div>
+            <div class="card"><h3>Open Lots</h3><p>${summary.total_open_lots}</p></div>
+        `;
+    }
+
+    function renderRealized(history) {
+        const tbody = document.getElementById('realized-body');
+        tbody.innerHTML = history.map(trade => `
+            <tr>
+                <td><strong>${trade.symbol}</strong></td>
+                <td>${trade.qty}</td>
+                <td>${trade.buy_date}</td>
+                <td>${trade.sell_date}</td>
+                <td>${trade.buy_rate}</td>
+                <td>${trade.sell_rate}</td>
+                <td class="${trade.net_pl >= 0 ? 'profit' : 'loss'}">${trade.net_pl}</td>
+                <td class="${trade.roi_pct >= 0 ? 'profit' : 'loss'}">${trade.roi_pct}%</td>
+                <td class="remarks">${trade.remarks || '-'}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderUnrealized(lots) {
+        const tbody = document.getElementById('unrealized-body');
+        tbody.innerHTML = lots.map(lot => `
+            <tr>
+                <td><strong>${lot.symbol}</strong></td>
+                <td>${lot.qty}</td>
+                <td>${lot.buy_date}</td>
+                <td>${lot.buy_rate}</td>
+                <td>${lot.ltp}</td>
+                <td class="remarks">${lot.remark || '-'}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Initialize
+    fetchTradeHistory();
+</script>
+
 </body>
 </html>
