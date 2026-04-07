@@ -6,6 +6,7 @@ const formatNum = (num) => {
     if (num === undefined || num === null || isNaN(num)) return "0.00";
     return parseFloat(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
+
 const formatInt = (num) => parseInt(num || 0).toLocaleString('en-IN');
 
 async function loadActivePortfolio() {
@@ -15,15 +16,17 @@ async function loadActivePortfolio() {
     
     try {
         const response = await fetch(`${API_BASE}/active_portfolio`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const json = await response.json();
         const activeData = json.data;
         const summary = json.summary;
 
         // 1. Summary Header
         if (summaryElement && summary) {
-            const isProfit = summary.actual_net_profit >= 0;
-            const pnlColor = isProfit ? '#10b981' : '#ef4444';
-            const sign = isProfit ? '+' : '';
+            const isOverallProfit = summary.actual_net_profit >= 0;
+            const pnlColor = isOverallProfit ? '#10b981' : '#ef4444';
+            const sign = isOverallProfit ? '+' : '';
             summaryElement.innerHTML = `
                 <span style="color: #94a3b8; margin-right: 15px;">Invested: Rs. ${formatNum(summary.total_invested)}</span>
                 <span style="color: #e2e8f0; margin-right: 15px; font-weight: bold;">Value: Rs. ${formatNum(summary.net_liquid_value)}</span>
@@ -36,39 +39,53 @@ async function loadActivePortfolio() {
         // 2. Table Body (10 Columns)
         tbody.innerHTML = '';
         activeData.forEach(stock => {
-    const isProfit = stock.real_pl_amt >= 0;
-    const pnlClass = isProfit ? 'profit' : 'loss';
-    const pnlSign = isProfit ? '+' : '';
-    
-    // Accurate Breakeven Calculation
-    const breakeven = (stock.total_cost + stock.exit_charges_inclusive_tax) / stock.net_qty;
+            const isStockProfit = stock.real_pl_amt >= 0;
+            const pnlClass = isStockProfit ? 'profit' : 'loss';
+            const pnlSign = isStockProfit ? '+' : '';
+            
+            // Avoid Division by Zero for Breakeven
+            const breakeven = stock.net_qty > 0 
+                ? (stock.total_cost + (stock.exit_charges_inclusive_tax || 0)) / stock.net_qty 
+                : 0;
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td class="symbol-badge">${stock.symbol}</td>
-        <td class="num">${formatInt(stock.net_qty)}</td>
-        <td class="num">Rs. ${formatNum(stock.wacc)}</td>
-        <td class="num" style="color: #64748b; font-size: 0.8rem;">Rs. ${formatNum(breakeven)}</td>
-        <td class="num" style="font-weight: bold; color: #3b82f6;">Rs. ${formatNum(stock.ltp)}</td>
-        
-        <td class="num" style="color: #94a3b8;">Rs. ${formatNum(stock.total_cost)}</td>
-        
-        <td class="num">Rs. ${formatNum(stock.receivable_val)}</td>
-        
-        <td class="num" style="font-weight: bold; color: ${isProfit ? '#10b981' : '#ef4444'};">
-            ${pnlSign}Rs. ${formatNum(stock.real_pl_amt)}
-        </td>
-        
-        <td class="num ${pnlClass}">${pnlSign}${formatNum(stock.real_pl_pct)}%</td>
-        
-        <td class="num" style="color: #64748b;">${formatNum(stock.weight)}%</td>
-    `;
-    tbody.appendChild(tr);
-});
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="symbol-badge">${stock.symbol}</td>
+                <td class="num">${formatInt(stock.net_qty)}</td>
+                <td class="num">Rs. ${formatNum(stock.wacc)}</td>
+                <td class="num" style="color: #64748b; font-size: 0.8rem;">Rs. ${formatNum(breakeven)}</td>
+                <td class="num" style="font-weight: bold; color: #3b82f6;">Rs. ${formatNum(stock.ltp)}</td>
+                <td class="num" style="color: #94a3b8;">Rs. ${formatNum(stock.total_cost)}</td>
+                <td class="num">Rs. ${formatNum(stock.receivable_val)}</td>
+                <td class="num" style="font-weight: bold; color: ${isStockProfit ? '#10b981' : '#ef4444'};">
+                    ${pnlSign}Rs. ${formatNum(stock.real_pl_amt)}
+                </td>
+                <td class="num ${pnlClass}">${pnlSign}${formatNum(stock.real_pl_pct)}%</td>
+                <td class="num" style="color: #64748b;">${formatNum(stock.weight)}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
 
     } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="10" class="loading-text">⚠️ API Error</td></tr>`;
+        console.error("Fetch Error:", error);
+        tbody.innerHTML = `<tr><td colspan="10" class="loading-text" style="color: #ef4444;">⚠️ API Error: Check connection to Render</td></tr>`;
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadActivePortfolio);
+// Attach listeners to your buttons in index.html
+document.addEventListener('DOMContentLoaded', () => {
+    loadActivePortfolio();
+
+    // Refresh Price Button
+    document.getElementById('refresh-price-btn')?.addEventListener('click', () => {
+        const tbody = document.getElementById('active-portfolio-body');
+        tbody.innerHTML = '<tr><td colspan="10" class="loading-text">Updating prices...</td></tr>';
+        loadActivePortfolio();
+    });
+
+    // Sync Trades Button (Assuming your API has a sync endpoint)
+    document.getElementById('sync-btn')?.addEventListener('click', async () => {
+        alert("Syncing with TMS/Database...");
+        // You can add a fetch call here to trigger a backend sync
+    });
+});
