@@ -76,16 +76,42 @@ async function loadActivePortfolio() {
 document.addEventListener('DOMContentLoaded', () => {
     loadActivePortfolio();
 
-    // Refresh Price Button
+    // Refresh Price Button (Local UI Refresh)
     document.getElementById('refresh-price-btn')?.addEventListener('click', () => {
         const tbody = document.getElementById('active-portfolio-body');
         tbody.innerHTML = '<tr><td colspan="10" class="loading-text">Updating prices...</td></tr>';
         loadActivePortfolio();
     });
 
-    // Sync Trades Button (Assuming your API has a sync endpoint)
-    document.getElementById('sync-btn')?.addEventListener('click', async () => {
-        alert("Syncing with TMS/Database...");
-        // You can add a fetch call here to trigger a backend sync
+    // Sync Trades Button (Now fires /api/refresh-ltp)
+    const syncBtn = document.getElementById('sync-btn');
+    syncBtn?.addEventListener('click', async () => {
+        try {
+            // Visual feedback: Disable button during sync
+            syncBtn.disabled = true;
+            syncBtn.innerText = "Syncing...";
+
+            const response = await fetch(`${API_BASE}/refresh-ltp`, {
+                method: 'POST', // Or 'GET' depending on your backend configuration
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) throw new Error('Sync failed');
+
+            const result = await response.json();
+            console.log("Sync Success:", result);
+            
+            // Refresh the UI to show new data
+            await loadActivePortfolio();
+            alert("Portfolio synced successfully!");
+
+        } catch (error) {
+            console.error("Sync Error:", error);
+            alert("Failed to sync trades. Please check the console or API status.");
+        } finally {
+            // Restore button state
+            syncBtn.disabled = false;
+            syncBtn.innerText = "Sync Trades";
+        }
     });
 });
