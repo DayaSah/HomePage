@@ -327,3 +327,60 @@ body {
     line-height: 1.5;
     color: var(--text-muted);
 }
+
+
+/* --- TRADER REMINDERS WIDGET CONFIG --- */
+.remember-points-widget {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(20, 25, 35, 0.7); 
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.remember-points-title {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    color: var(--accent);
+}
+
+.rules-grid {
+    display: grid;
+    /* Clean grid matrix: tracks flex smoothly across varying resolutions */
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.rule-card {
+    background: rgba(15, 23, 42, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.rule-card .card-tag {
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Color Palette Pipeline overrides */
+.rule-card .card-tag.risk { color: var(--loss); }
+.rule-card .card-tag.execution { color: var(--profit); }
+.rule-card .card-tag.psychology { color: var(--symbol); }
+.rule-card .card-tag.mistake { color: #f97316; }  /* Alert Orange */
+.rule-card .card-tag.system { color: #a855f7; }   /* Dev Purple */
+
+.rule-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
