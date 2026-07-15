@@ -269,3 +269,61 @@ body {
     }
     #portfolio-summary span:last-child { margin-bottom: 0; }
 }
+
+
+
+/* --- TRADER REMINDERS & RULES WIDGET --- */
+.remember-points-widget {
+    grid-column: 1 / -1;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(20, 25, 35, 0.7); /* Perfect match with portfolio-widget */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.remember-points-content {
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.remember-points-title {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    color: var(--accent); /* Uses cyan terminal accent */
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.rule-card {
+    background: rgba(15, 23, 42, 0.5); /* Semi-transparent terminal background */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.rule-card .card-tag {
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* Color codes mapping to your CSS Theme Palette */
+.rule-card .card-tag.risk { color: var(--loss); }        /* Red */
+.rule-card .card-tag.execution { color: var(--profit); } /* Green */
+.rule-card .card-tag.psychology { color: var(--symbol); } /* Blue */
+
+.rule-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
